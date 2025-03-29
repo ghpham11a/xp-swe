@@ -29,6 +29,8 @@ class Solution:
             else: 
                 if len(next_word) < len(word):
                     return False
+                
+        print(graph)
 
         return True
 
