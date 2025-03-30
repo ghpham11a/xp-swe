@@ -16,6 +16,8 @@ class Solution:
         # Initialize low_links
         low_links = [None for i in range(n)]
 
+        print(graph)
+
         self.dfs(graph, low_links, unique_edges, 0, 0)
         
         # format result
