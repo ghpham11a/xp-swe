@@ -1,58 +1,79 @@
-from collections import defaultdict
+class UndirectedGraph(object):
+    def __init__(self, size):
+        self.size = size
+        # Each index contains a list of adjacent vertices.
+        self.adjacency_list = [[] for _ in range(size)]
+
+    def add_edge(self, u, v):
+        # Even though a weight is provided, this graph is unweighted.
+        self.adjacency_list[u].append(v)
+        self.adjacency_list[v].append(u)
 
 class Solution:
     
     def critical_connections(self, n, connections):
 
-        # Build Graph and Edge Map
-        graph = defaultdict(list)
-        unique_edges = set()
-        for src, dst in connections:
-            graph[src].append(dst)
-            graph[dst].append(src)
+        graph = UndirectedGraph(n)
+        for u, v in connections:
+            graph.add_edge(u, v)
 
-            unique_edges.add((min(src, dst), max(src, dst)))
+        articulation_points, bridges = self.modified_tarjans(graph)
 
-        # Initialize low_links
-        low_links = [None for i in range(n)]
+        return list(map(list, bridges))
+    
+    def modified_tarjans(self, graph):
 
-        self.dfs(graph, low_links, unique_edges, 0, 0)
-        
-        # format result
-        result = []
-        for u, v in unique_edges:
-            result.append([u, v])
-        
-        return result
+        # Initialize discovery times as -1 to denote unvisted notes
+        disc = [-1] * graph.size 
+        # Initialize low values 
+        low = [-1] * graph.size 
+        # To record DFS tree parents 
+        parent = [None] * graph.size 
+
+        articulation_points = set()
+        bridges = set()
+        time = [0]
+
+        for node in range(graph.size):
+            if disc[node] == -1:
+                self.tarjan_dfs(node, parent, disc, low, time, graph, articulation_points, bridges)
+
+        return articulation_points, bridges
             
-    def dfs(self, graph, low_links, unique_edges, node, time):
-        
-        # That means this node is already visited. We simply return the rank.
-        if low_links[node]:
-            return low_links[node]
-        
-        # Update the rank of this node.
-        low_links[node] = time
-        
-        # This is the max we have seen till now. So we start with this instead of INT_MAX or something.
-        min_time = time + 1
-        for neighbor in graph[node]:
-            
-            # Skip the parent.
-            if low_links[neighbor] and low_links[neighbor] == time - 1:
-                continue
-                
-            # Recurse on the neighbor.    
-            recursive_rank = self.dfs(graph, low_links, unique_edges, neighbor, time + 1)
-            
-            # Step 1, check if this edge needs to be discarded.
-            if recursive_rank <= time:
-                unique_edges.remove((min(node, neighbor), max(node, neighbor)))
-            
-            # Step 2, update the minRank if needed.
-            min_time = min(min_time, recursive_rank)
-        
-        return min_time
+    def tarjan_dfs(self, node, parent, disc, low, time, graph, articulation_points, bridges):
+
+        # Set the discovery time and low value for current node
+        disc[node] = low[node] = time[0]
+        time[0] += 1
+        child_count = 0
+
+        # Iterate over all adjacent vertices of node
+        for neighbor in graph.adjacency_list[node]:
+            if disc[neighbor] == -1:
+                child_count += 1
+                # Set node(u) as parent of neighbor(v)
+                parent[neighbor] = node
+                self.tarjan_dfs(neighbor, parent, disc, low, time, graph, articulation_points, bridges)
+
+                # Update low-link value for u based on child v
+                low[node] = min(low[node], low[neighbor])
+
+                # If u is root of DFS and has more than one child, it's an articulation point.
+                if parent[node] is None and child_count > 1:
+                    articulation_points.add(node)
+
+                # If node(u) is not root and low value of one child is at least node(u)'s discovery time,
+                # then u is an articulation point.
+                if parent[node] is not None and low[neighbor] >= disc[node]:
+                    articulation_points.add(node)
+
+                # If the low-link value of neighbor(v) is greater than the discovery time of node(u)
+                # then edge (u, v) is bridge.
+                if low[neighbor] > disc[node]:
+                    bridges.add((node, neighbor))
+            # neighbor(v) is visited and is not the parent of u (back edge).
+            elif neighbor != parent[node]:
+                low[node] = min(low[node], disc[neighbor])
 
 runner = Solution()
 

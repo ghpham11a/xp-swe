@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 class DirectedGraph(object):
 
     def __init__(self, size):
