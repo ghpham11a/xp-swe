@@ -7,40 +7,40 @@ class DirectedGraph(object):
     def add_edge(self, u, v):
         self.adjacency_list[u].append(v)
 
-UNVISITED = -1
-
 def tarjans(graph):
 
     time = [0]
-    in_times = [UNVISITED] * graph.size
+    ids = [-1] * graph.size
     low_links = [0] * graph.size
     on_stack = [False] * graph.size
     stack = []
 
     for node in range(graph.size):
-        if in_times[node] == UNVISITED:
-            tarjans_dfs(graph, time, in_times, low_links, on_stack, stack, node)
+        if ids[node] == -1:
+            strong_connect(graph, time, ids, low_links, on_stack, stack, node)
 
     return low_links
 
-def tarjans_dfs(graph, time, in_times, low_links, on_stack, stack, node):
+def strong_connect(graph, time, ids, low_links, on_stack, stack, node):
     stack.append(node)
     on_stack[node] = True
     time[0] += 1
-    in_times[node] = low_links[node] = time[0]
+    ids[node] = low_links[node] = time[0]
 
     for neighbor in graph.adjacency_list[node]:
-        if in_times[neighbor] == UNVISITED:
-            tarjans_dfs(graph, time, in_times, low_links, on_stack, stack, neighbor)
+        if ids[neighbor] == -1:
+            strong_connect(graph, time, ids, low_links, on_stack, stack, neighbor)
 
-        if on_stack[neighbor] == True:
             low_links[node] = min(low_links[node], low_links[neighbor])
 
-    if in_times[node] == low_links[node]:
+        elif on_stack[neighbor]:
+            low_links[node] = min(low_links[node], ids[neighbor])
+
+    if ids[node] == low_links[node]:
         while len(stack) > 0:
             stack_node = stack.pop()
             on_stack[stack_node] = False
-            low_links[stack_node] = in_times[node]
+            low_links[stack_node] = ids[node]
             if stack_node == node:
                 break
 

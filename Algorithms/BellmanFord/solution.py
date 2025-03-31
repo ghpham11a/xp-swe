@@ -4,14 +4,14 @@ class DirectedWeightedGraph(object):
         self.size = size
         self.adjacency_list = [[] for _ in range(size)]
 
-    def add_edge(self, src, dst, weight):
-        self.adjacency_list[src].append((dst, weight))
+    def add_edge(self, rel_src, rel_dst, weight):
+        self.adjacency_list[rel_src].append((rel_dst, weight))
 
     def get_edges(self):
         graph_edges = []
-        for src, neighbors in enumerate(graph.adjacency_list):
-            for dst, to_dst_weight in neighbors:
-                graph_edges.append((src, dst, to_dst_weight))
+        for rel_src, neighbors in enumerate(self.adjacency_list):
+            for rel_dst, rel_weight in neighbors:
+                graph_edges.append((rel_src, rel_dst, rel_weight))
         return graph_edges
 
 def bellman_ford(graph, start):
@@ -24,15 +24,15 @@ def bellman_ford(graph, start):
     graph_edges = graph.get_edges()
     
     for _ in range(graph.size - 1):
-        for src, dst, to_dst_weight in graph_edges:
-            if distances[src] + to_dst_weight < distances[dst]:
-                distances[dst] = distances[src] + to_dst_weight
-                predecessor[dst] = src
+        for rel_src, rel_dst, rel_weight in graph_edges:
+            if distances[rel_src] + rel_weight < distances[rel_dst]:
+                distances[rel_dst] = distances[rel_src] + rel_weight
+                predecessor[rel_dst] = rel_src
 
     for _ in range(graph.size - 1):
-        for src, dst, to_dst_weight in graph_edges:
-            if distances[src] + to_dst_weight < distances[dst]:
-                distances[dst] = -float("inf")
+        for rel_src, rel_dst, rel_weight in graph_edges:
+            if distances[rel_src] + rel_weight < distances[rel_dst]:
+                distances[rel_dst] = -float("inf")
 
     return distances, predecessor
 

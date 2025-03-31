@@ -21,11 +21,12 @@ def modified_tarjans(graph):
     - bridges: a set of tuples (u, v) representing bridges.
     """
      
-    # Initialize discovery times as -1 to denote unvisted notes
+    # Initialize ids as -1 to denote unvisted notes
     # Essential for both marking visitation and serving as a reference point for the key comparisons that identify critical vertices and edges in the graph.
-    disc = [-1] * graph.size 
-    # Initialize low values 
-    low = [-1] * graph.size 
+    ids = [-1] * graph.size 
+    # Initialize low_links link values
+    # it is the smallest node id reachable from that node when doing DFS (including itself) 
+    low_links = [-1] * graph.size 
     # To record DFS tree parents 
     parent = [None] * graph.size 
 
@@ -34,59 +35,59 @@ def modified_tarjans(graph):
     time = [0]
 
     for node in range(graph.size):
-        if disc[node] == -1:
-            tarjan_dfs(node, parent, disc, low, time, graph, articulation_points, bridges)
+        if ids[node] == -1:
+            tarjan_dfs(node, parent, ids, low_links, time, graph, articulation_points, bridges)
 
     return articulation_points, bridges
 
-def tarjan_dfs(node, parent, disc, low, time, graph, articulation_points, bridges):
+def tarjan_dfs(node, parent, ids, low_links, time, graph, articulation_points, bridges):
     """
-    Perform a DFS starting at vertex u, updating discovery and low-link times.
+    Perform a DFS starting at vertex u, updating idsovery and low_links-link times.
     Also, identify articulation points and bridges in the process.
     
     Parameters:
     - u: current vertex.
     - parent: list holding the parent of each vertex in the DFS tree.
-    - disc: list holding discovery times for each vertex.
-    - low: list holding the lowest discovery time reachable from each vertex.
-    - time: a single-element list used as a mutable counter for discovery time.
+    - ids: list holding idsovery times for each vertex.
+    - low_links: list holding the low_linksest idsovery time reachable from each vertex.
+    - time: a single-element list used as a mutable counter for idsovery time.
     - graph: an instance of UndirectedGraph.
     - articulation_points: set to store identified articulation points.
     - bridges: set to store identified bridges (as (u, v) tuples).
     """
     
-    # Set the discovery time and low value for current node
-    disc[node] = low[node] = time[0]
+    # Set the id time and low_links value for current node
+    ids[node] = low_links[node] = time[0]
     time[0] += 1
     child_count = 0
 
     # Iterate over all adjacent vertices of node
     for neighbor in graph.adjacency_list[node]:
-        if disc[neighbor] == -1:
+        if ids[neighbor] == -1:
             child_count += 1
             # Set node(u) as parent of neighbor(v)
             parent[neighbor] = node
-            tarjan_dfs(neighbor, parent, disc, low, time, graph, articulation_points, bridges)
+            tarjan_dfs(neighbor, parent, ids, low_links, time, graph, articulation_points, bridges)
 
-            # Update low-link value for u based on child v
-            low[node] = min(low[node], low[neighbor])
+            # Update low_links-link value for u based on child v
+            low_links[node] = min(low_links[node], low_links[neighbor])
 
             # If u is root of DFS and has more than one child, it's an articulation point.
             if parent[node] is None and child_count > 1:
                 articulation_points.add(node)
 
-            # If node(u) is not root and low value of one child is at least node(u)'s discovery time,
+            # If node(u) is not root and low_links value of one child is at least node(u)'s idsovery time,
             # then u is an articulation point.
-            if parent[node] is not None and low[neighbor] >= disc[node]:
+            if parent[node] is not None and low_links[neighbor] >= ids[node]:
                 articulation_points.add(node)
 
-            # If the low-link value of neighbor(v) is greater than the discovery time of node(u)
+            # If the low_links-link value of neighbor(v) is greater than the idsovery time of node(u)
             # then edge (u, v) is bridge.
-            if low[neighbor] > disc[node]:
+            if low_links[neighbor] > ids[node]:
                 bridges.add((node, neighbor))
         # neighbor(v) is visited and is not the parent of u (back edge).
         elif neighbor != parent[node]:
-            low[node] = min(low[node], disc[neighbor])
+            low_links[node] = min(low_links[node], ids[neighbor])
 
 graph = UndirectedGraph(7)
 
