@@ -24,7 +24,7 @@ def bfs(graph, node):
         curr_node = queue.pop()
         output.append(curr_node)
 
-        for neighbor in graph.adjacency_list[node]:
+        for neighbor in graph.adjacency_list[curr_node]:
             if visited[neighbor] == False:
                 queue.appendleft(neighbor)
                 visited[neighbor] = True
