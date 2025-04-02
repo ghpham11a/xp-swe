@@ -11,39 +11,55 @@ class UndirectedWeightedGraph(object):
         self.adjacency_list[v].append((u, weight))
 
 def prims(graph):
-
+    # The number of edges in a spanning tree is (number of vertices - 1).
     target_edge_count = graph.size - 1
-    edge_count = 0
+    # Counter for how many edges are added to the MST.
+    edge_count = 0         
+     
+    # Total cost (weight) of the MST.
     mst_cost = 0
+     # To store the edges included in the MST.             
     mst_edges = [None] * target_edge_count
+
+    # Keep track of vertices already included in the MST.
     visited = [False] * graph.size
 
+    # Priority queue (min-heap) for edges based on weight.
+    # Each entry in the heap is a tuple (edge weight, source vertex, destination vertex).
     pq = []
 
+    # Start by adding all edges from vertex 0.
     prims_add_edges(graph, visited, pq, 0)
 
+    # Continue until we either have all necessary MST edges or the priority queue is empty.
     while pq and edge_count != target_edge_count:
-
+        # Pop the edge with the smallest weight.
         to_dst_weight, src, dst = heapq.heappop(pq)
 
+        # If the destination vertex is already in the MST, skip it.
         if visited[dst]:
             continue
 
+        # Add the edge to the MST.
         mst_edges[edge_count] = (src, dst, to_dst_weight)
         edge_count += 1
         mst_cost += to_dst_weight
 
+        # Add new edges from the newly visited vertex.
         prims_add_edges(graph, visited, pq, dst)
 
+    # If we haven't added enough edges, the graph might be disconnected.
     if edge_count != target_edge_count:
         return (None, None)
 
     return (mst_cost, mst_edges)
 
 def prims_add_edges(graph, visited, pq, src):
-    
+    # Mark the current vertex as visited.
     visited[src] = True
 
+    # Add all edges from the current vertex to the priority queue,
+    # but only if the destination vertex has not been visited.
     for dst, to_dst_weight in graph.adjacency_list[src]:
         if not visited[dst]:
             heapq.heappush(pq, (to_dst_weight, src, dst))
