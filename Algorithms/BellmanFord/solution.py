@@ -7,23 +7,6 @@ class DirectedWeightedGraph(object):
     def add_edge(self, rel_src, rel_dst, weight):
         self.adjacency_list[rel_src].append((rel_dst, weight))
 
-def _bellman_ford(graph, start):
-
-    distances = [float("inf") for _ in range(graph.size)]
-    predecessor = [None for _ in range(graph.size)]
-
-    graph_edges = []
-    for rel_src, neighbors in enumerate(graph.adjacency_list):
-        for rel_dst, rel_weight in neighbors:
-            graph_edges.append((rel_src, rel_dst, rel_weight))
-
-    for _ in range(graph.size - 1):
-        for rel_src, rel_dst, rel_weight in graph_edges:
-            if distances[rel_src] + rel_weight < distances[rel_dst]:
-                distances[rel_dst] = distances[rel_src] + rel_weight
-                predecessor[rel_dst] = rel_src
-
-
 def bellman_ford(graph, start):
 
     # Step 1: Initialize distances from the start vertex to all other vertices.
