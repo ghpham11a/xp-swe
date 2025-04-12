@@ -1,4 +1,33 @@
 def merge_sort(nums):
+
+    if len(nums) < 2:
+        return nums
+    
+    output = []
+
+    middle = len(nums) // 2
+
+    left_list = merge_sort(nums[:middle])
+    right_list = merge_sort(nums[middle:])
+
+    left_index = 0
+    right_index = 0
+
+    while (left_index < len(left_list)) and (right_index < len(right_list)):
+        if left_list[left_index] < right_list[right_index]:
+            output.append(left_list[left_index])
+            left_index += 1
+        else:
+            output.append(right_list[right_index])
+            right_index += 1
+
+    output += left_list[left_index:]
+    output += right_list[right_index:]
+
+    return output
+
+
+def merge_sort(nums):
     # Base case: if the list is empty or contains only one element, it's already sorted.
     if len(nums) < 2:
         return nums

@@ -1,5 +1,5 @@
 class Solution(object):
-
+    
     def max_profit(self, prices):
 
         min_price = prices[0]

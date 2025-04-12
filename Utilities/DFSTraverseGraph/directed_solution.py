@@ -16,6 +16,7 @@ def dfs(graph, start, visited=None):
             dfs(graph, neighbor, visited)
     return visited
 
+
 directed = DirectedGraph(5)
 directed.add_edge(0, 1)
 directed.add_edge(0, 2)
