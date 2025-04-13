@@ -14,8 +14,6 @@ def dfs(graph, start, visited=None):
     for neighbor in graph.adjacency_list[start]:
         if neighbor not in visited:
             dfs(graph, neighbor, visited)
-    return visited
-
 
 directed = DirectedGraph(5)
 directed.add_edge(0, 1)

@@ -7,26 +7,41 @@ class Solution(object):
 
     def detect_cycle(self, head):
         
+        # Initialize both slow and fast pointers to the head of the list.
         slow = head
         fast = head
+        
+        # Flag to indicate whether a meeting point was found
         met = False
 
+        # Traverse the list with slow pointer moving one step and fast pointer moving two steps.
         while fast is not None and fast.next is not None:
-            slow = slow.next 
-            fast = fast.next.next 
+            # Move slow pointer by one node
+            slow = slow.next
+            # Move fast pointer by two nodes          
+            fast = fast.next.next   
 
+            # If the slow and fast pointers meet, it means there is a cycle in the list.
             if slow == fast:
+                # A cycle has been detected.
                 met = True
-                break 
+                # Exit the loop as meeting point is found.
+                break
 
-        if met == False:
+        # If the pointers never met, there is no cycle in the list.
+        if not met:
             return None
         
+        # To find the start of the cycle, reset the slow pointer to the head.
         slow = head 
+        
+        # Move both pointers one step at a time until they meet.
+        # The meeting point will be at the start of the cycle.
         while slow != fast:
-            slow = slow.next 
-            fast = fast.next 
+            slow = slow.next        # Move one step from the head.
+            fast = fast.next        # Continue moving from the meeting point.
 
+        # Both pointers now meet at the start of the cycle.
         return slow
 
 solution = Solution()

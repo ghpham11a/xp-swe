@@ -30,11 +30,11 @@ class Solution:
         placeholder = ListNode(0, head)
 
         left_prev, curr = placeholder, head
-        for i in range(left - 1):
+        for _ in range(left - 1):
             left_prev, curr = curr, curr.next
 
         prev = None
-        for i in range(right - left + 1):
+        for _ in range(right - left + 1):
             tmp_next = curr.next
             curr.next = prev
             prev, curr = curr, tmp_next
