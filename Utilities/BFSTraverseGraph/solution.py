@@ -31,6 +31,25 @@ def bfs(graph, node):
 
     return output
 
+def bfs(graph, node):
+
+    output = []
+    visited = [False] * graph.size
+    queue = deque()
+
+    queue.appendleft(node)
+    visited[node] = True
+
+    while queue:
+
+        curr_node = queue.pop()
+        output.append(curr_node)
+
+        for neighbor in graph.adjacency_list[curr_node]:
+            if visited[neighbor] == False:
+                queue.appendleft(neighbor)
+                visited[neighbor] = True 
+
 
 graph = UndirectedGraph(4)
 graph.add_edge(0, 1)
