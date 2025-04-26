@@ -8,6 +8,24 @@ class UndirectedGraph:
         self.adjacency_list[u].append(v)
         self.adjacency_list[v].append(u)
 
+def function(graph, node):
+
+    output = []
+    visited = [False] * graph.size
+
+    dfs(graph, 0, output, visited)
+
+    return output
+
+def dfs(graph, node, output, visited):
+
+    output.append(node)
+    visited[node] = True 
+
+    for neighbor in graph.adjacency_list[node]:
+        if neighbor not in visited:
+            dfs(graph, neighbor, output, visited)
+
 def dfs(graph, start, visited=None):
     if visited is None:
         visited = set()

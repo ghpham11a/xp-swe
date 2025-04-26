@@ -1,3 +1,5 @@
+import math
+
 class Solution:
 
     def min_eating_speed(self, piles, h):
