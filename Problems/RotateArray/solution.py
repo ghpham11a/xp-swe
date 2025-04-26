@@ -1,20 +1,25 @@
-class Solution:
-    def rotate(self, nums, k):
-        nums_len = len(nums) - 1
+class Solution(object):
 
-        self.reverse(0, nums_len, nums)
+    def rotate(self, matrix):
+        # Get the size (number of rows, assuming it's a square matrix)
+        row_len = len(matrix)
+    
+        # Step 1: Transpose the matrix
+        # Swap matrix[i][j] with matrix[j][i] for all i < j
+        # This flips the matrix over its diagonal
+        for i in range(0, row_len):
+            for j in range(i, row_len):
+                temp = matrix[j][i]
+                matrix[j][i] = matrix[i][j]
+                matrix[i][j] = temp
 
-        k = k % len(nums)
+        # Step 2: Reverse each row
+        # After transposing, reversing each row results in a 90-degree clockwise rotation
+        for i in range(0, row_len):
+            for j in range(0, (row_len // 2)):
+                # Swap elements from left and right ends of the row
+                tmp = matrix[i][j]
+                matrix[i][j] = matrix[i][row_len - j - 1]
+                matrix[i][row_len - j - 1] = tmp
 
-        self.reverse(0, k - 1, nums)
-
-        self.reverse(k, nums_len, nums)
-
-    def reverse(self, start, end, nums):
-        while start < end:
-            temp = nums[start]
-            nums[start] = nums[end]
-            nums[end] = temp
-
-            start += 1
-            end -= 1
+        return matrix
