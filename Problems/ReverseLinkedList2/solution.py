@@ -27,21 +27,28 @@ class ListNode:
 class Solution:
 
     def reverse_between(self, head, left, right):
+        # Create a placeholder (dummy) node to simplify edge cases like reversing from head
         placeholder = ListNode(0, head)
 
+        # Step 1: Move `left_prev` and `curr` to the right starting positions
+        # `left_prev` will point to the node before the reversal starts
+        # `curr` will point to the first node to be reversed
         left_prev, curr = placeholder, head
         for _ in range(left - 1):
             left_prev, curr = curr, curr.next
 
+        # Step 2: Reverse the sublist between `left` and `right`
         prev = None
         for _ in range(right - left + 1):
-            tmp_next = curr.next
-            curr.next = prev
-            prev, curr = curr, tmp_next
+            tmp_next = curr.next        # Temporarily store next node
+            curr.next = prev            # Reverse the pointer
+            prev, curr = curr, tmp_next  # Move forward in the list
 
-        left_prev.next.next = curr
-        left_prev.next = prev
+        # Step 3: Reconnect the reversed sublist with the remaining list
+        left_prev.next.next = curr      # Connect tail of reversed sublist to the rest
+        left_prev.next = prev           # Connect node before sublist to the new head
 
+        # Return the new head (which might be different if head was reversed)
         return placeholder.next
     
 
