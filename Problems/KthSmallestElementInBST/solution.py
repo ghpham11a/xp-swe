@@ -1,19 +1,34 @@
+from typing import Optional
 import heapq
 
-class Solution(object):
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-    def find_kth_largest(self, nums, k):
+class Solution:
 
-        max_heap = []
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        stack = []  # Stack to simulate recursive in-order traversal
 
-        for num in nums:
-            heapq.heappush(max_heap, -1 * num)
+        while True:
+            # Go as left as possible from the current node
+            while root:
+                stack.append(root)  # Push current node to stack
+                root = root.left     # Move to left child
 
-        output = 0
-        for n in range(k):
-            output = heapq.heappop(max_heap)
+            # Pop the node from the top of the stack
+            root = stack.pop()
+            k -= 1  # We've now visited one more node in in-order sequence
 
-        return output * -1
+            # If k is 0, we've reached the kth smallest element
+            if not k:
+                return root.val
+
+            # Move to the right child to continue in-order traversal
+            root = root.right
 
 solution = Solution()
 
