@@ -1,26 +1,30 @@
-class Solution(object):
+from typing import List
 
-    def word_break(self, s, word_dict):
-        
-        def recurse(target, words, memo):
+class Solution:
 
-            if target in memo:
-                return memo[target]
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
 
-            if target == "":
-                return True
+        len_s = len(s)
 
-            for word in words:
-                if target.find(word) == 0:
-                    suffix = target[len(word):]
-                    if recurse(suffix, words, memo) == True:
-                        memo[target] = True
-                        return memo[target]
+        # dp[i] represents whether the substring s[i:] can be segmented into words from wordDict
+        dp = [False] * (len_s + 1)
+        dp[len_s] = True  # Base case: empty string is segmentable
 
-            memo[target] = False
-            return memo[target]
+        # Iterate backwards from the end of the string to the beginning
+        for i in range(len_s - 1, -1, -1):
+            # Try every word in the dictionary
+            for w in wordDict:
+                len_w = len(w)
+                # Check if the word fits in the current position and matches the substring
+                if (i + len_w) <= len_s and s[i:i + len_w] == w:
+                    # If s[i:i+len(w)] is a word and the remainder s[i+len(w):] is segmentable
+                    dp[i] = dp[i + len_w]
+                if dp[i]:
+                    # Early break: no need to check other words if we already found a valid break
+                    break
 
-        return recurse(s, word_dict, {})
+        # The result is whether the full string s[0:] can be segmented
+        return dp[0]
 
 solution = Solution()
 
