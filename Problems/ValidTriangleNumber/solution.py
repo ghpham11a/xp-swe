@@ -21,7 +21,8 @@ class Solution:
                 while large_side < len(nums) and nums[small_side] + nums[other_side] > nums[large_side]:
                     large_side += 1
 
-                # The number of valid triangles that can be formed with the current pair of first two elements is the difference between the third pointer and the second pointer minus 1
+                # The number of valid triangles that can be formed with the current pair of 
+                # first two elements is the difference between the third pointer and the second pointer minus 1
                 count += (large_side - other_side - 1)
                     
         return count
