@@ -1,4 +1,5 @@
 class Solution:
+
     def characterReplacement(self, s, k):
         # Dictionary to keep count of character frequencies in the current window.
         count = {}

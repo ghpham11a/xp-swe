@@ -2,27 +2,25 @@ class Solution:
 
     def triangle_number(self, nums):
         
-        count = 0
+        # Sort the array so we can apply the triangle inequality efficiently
         nums.sort()
-        
-        for small_side in range(len(nums) - 2):
 
-            # If the first element of the triplet is 0, move to the next element
-            if nums[small_side] == 0:
-                continue
+        count = 0  # This will keep track of the number of valid triangle triplets
 
-            # Initialize third pointer to i + 2
-            large_side = small_side + 2
+        # Start from the last element and work backwards
+        # We treat nums[i] as the longest side of the triangle
+        for i in range(len(nums) - 1, 1, -1):
+            left = 0             # Start of the array
+            right = i - 1        # Just before the current longest side
 
-            # Loop through all possible second elements of the triplet
-            for other_side in range(small_side + 1, len(nums) - 1):
+            # Use two-pointer technique to find valid pairs (nums[left], nums[right])
+            while left < right:
+                # If the sum of the two smaller sides is greater than the largest side,
+                # then all elements between left and right form a valid triangle with nums[i]
+                if nums[left] + nums[right] > nums[i]:
+                    count += right - left  # All elements from left to right-1 form valid triangles
+                    right -= 1             # Try a smaller second side to find more combinations
+                else:
+                    left += 1              # Increase the smaller side to try and satisfy the inequality
 
-                # Move the third pointer to the first element that is greater than or equal to the sum of the first two elements
-                while large_side < len(nums) and nums[small_side] + nums[other_side] > nums[large_side]:
-                    large_side += 1
-
-                # The number of valid triangles that can be formed with the current pair of 
-                # first two elements is the difference between the third pointer and the second pointer minus 1
-                count += (large_side - other_side - 1)
-                    
-        return count
+        return count  # Return the total number of valid triangle combinations

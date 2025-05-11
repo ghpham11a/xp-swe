@@ -1,6 +1,8 @@
+from typing import List
+
 class Solution:
 
-    def insert(self, intervals, new_interval):
+    def insert(self, intervals: List[List[int]], new_interval: List[int]) -> List[List[int]]:
         output = []  # This will store the final list of merged intervals
 
         for i in range(len(intervals)):
