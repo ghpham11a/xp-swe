@@ -1,3 +1,5 @@
+from typing import List
+
 class Solution(object):
 
     def combination_sum_4(self, nums: List[int], target: int) -> int:
