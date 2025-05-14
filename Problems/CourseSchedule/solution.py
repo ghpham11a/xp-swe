@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 class Solution:
 
     def can_finish(self, numCourses, prerequisites):
